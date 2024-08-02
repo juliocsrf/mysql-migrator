@@ -1,0 +1,6 @@
+out
+.idea
+.env
+docker-compose.yml
+node_modules
+.DS_Store

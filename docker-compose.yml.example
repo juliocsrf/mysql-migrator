@@ -1,0 +1,14 @@
+services:
+  db-migration:
+    container_name: db-migration
+    build:
+      context: .
+    volumes:
+      - ./out:/usr/src/app/out
+    env_file:
+      - .env
+    networks: 
+      - wsl
+networks:
+  wsl:
+    external: true
