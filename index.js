@@ -46,7 +46,7 @@ async function dumpDatabase(tableList, dumpFileName, includeData) {
     return new Promise((resolve, reject) => {
         const lockTablesOption = includeData ? '--complete-insert' : '--no-data';
         const tables = tableList.join(' ');
-        const dumpCommand = `mysqldump --host=${process.env.DB_HOST_SOURCE} --user=${process.env.DB_USER_SOURCE} --password=${process.env.DB_PASSWORD_SOURCE} ${process.env.DB_DATABASE_SOURCE} ${lockTablesOption} --skip-lock-tables ${tables} >> out/${dumpFileName}`;
+        const dumpCommand = `mysqldump --host=${process.env.DB_HOST_SOURCE} --user=${process.env.DB_USER_SOURCE} --password='${process.env.DB_PASSWORD_SOURCE}' ${process.env.DB_DATABASE_SOURCE} ${lockTablesOption} --skip-lock-tables ${tables} >> out/${dumpFileName}`;
         exec(dumpCommand, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Error executing dump command: ${error.message}`);
