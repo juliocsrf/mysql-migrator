@@ -26,20 +26,16 @@ const poolDestino = mariadb.createPool({
     database: process.env.DB_DATABASE_TARGET
 });
 
-// Excluir somente os arquivos de dentro da pasta "out", mas manter a pasta
-fs.readdir('out', (err, files) => {
-    if (err) {
-        console.error(`Error reading directory: ${err.message}`);
-    } else {
-        for (const file of files) {
-            fs.unlink(`out/${file}`, (err) => {
-                if (err) {
-                    console.error(`Error deleting file: ${err.message}`);
-                }
-            });
-        }
+async function pingDatabase(pool) {
+    try {
+        const connection = await pool.getConnection();
+        connection.release();
+        return true;
+    } catch (error) {
+        console.error(`Error connecting to database: ${error.message}`);
+        return false;
     }
-});
+}
 
 // Função para executar o dump do banco de origem
 async function dumpDatabase(tableList, dumpFileName, includeData) {
@@ -115,5 +111,19 @@ async function main() {
     }
 }
 
-// Executar a função principal
-main();
+
+async function start() {
+    console.log("Attempting to connect to origin database...");
+    const sourcePing = await pingDatabase(poolOrigem);
+
+    console.log("Attempting to connect to target database...");
+    const targetPing = await pingDatabase(poolDestino);
+
+    if (sourcePing && targetPing) {
+        main();
+    } else {
+        process.exit(1);
+    }
+}
+
+start();
