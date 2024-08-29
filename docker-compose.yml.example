@@ -5,6 +5,8 @@ services:
       context: .
     volumes:
       - ./out:/usr/src/app/out
+    - ./index.js:/usr/src/app/index.js
+      - ./tables.json:/usr/src/app/tables.json
     env_file:
       - .env
     networks: 
