@@ -91,14 +91,19 @@ async function main() {
         console.log('Dumping full tables...');
         await dumpDatabase(tablesToDump, 'full.sql', true);
 
-        // Fazer dump das estruturas das tabelas listadas em structure_only
-        console.log('Dumping structure tables...');
-        await dumpDatabase(tables.structure_only, 'structure.sql', false);
+        if (tables.structure_only.length === 0) {
+            // Fazer dump das estruturas das tabelas listadas em structure_only
+            console.log('Dumping structure tables...');
+            await dumpDatabase(tables.structure_only, 'structure.sql', false);
+        }
 
         // Se ENABLE_MIGRATE estiver definido como TRUE, executar a migração
         if (process.env.ENABLE_MIGRATE === 'TRUE') {
             await migrateDatabase('full.sql');
-            await migrateDatabase('structure.sql');
+
+            if (tables.structure_only.length > 0) {
+                await migrateDatabase('structure.sql');
+            }
         }
 
         console.log('Migration completed successfully.');
