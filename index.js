@@ -91,7 +91,7 @@ async function main() {
         console.log('Dumping full tables...');
         await dumpDatabase(tablesToDump, 'full.sql', true);
 
-        if (tables.structure_only.length === 0) {
+        if (tables.structure_only.length > 0) {
             // Fazer dump das estruturas das tabelas listadas em structure_only
             console.log('Dumping structure tables...');
             await dumpDatabase(tables.structure_only, 'structure.sql', false);
